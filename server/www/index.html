@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>TriGuide</title>
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 100vh;
+      z-index: 10;
+    }
+
+    #refresh {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      z-index: 100;
+    }
+
+    #quit {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      z-index: 100;
+    }
+
+    .marker {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+    }
+
+    .button-error {
+      background: rgb(202, 60, 60);
+      color: #fff;
+    }
+  </style>
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="refresh">
+    <button class="pure-button pure-button-primary">Refresh</button>
+  </div>
+  <div id="quit">
+    <button class="pure-button button-error">Quit</button>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const map = L.map('map', {
+        center: [45.4546854, -122.773129],
+        zoom: 17,
+        zoomControl: false
+      });
+
+      const stops = {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "5161",
+              "stop_name": "8600 Block SW Scholls Ferry",
+              "jurisdiction": "Beaverton",
+              "zipcode": "97008",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.781936,
+                45.458027
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "2296",
+              "stop_name": "SW Hall & Scholls Ferry",
+              "jurisdiction": "Beaverton",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.782042,
+                45.456532
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "2295",
+              "stop_name": "SW Hall & Scholls Ferry",
+              "jurisdiction": "Beaverton",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.78214,
+                45.456842
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "6133",
+              "stop_name": "9000 Block SW Washington Square Rd",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.783054,
+                45.453956
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "9221",
+              "stop_name": "SW Palmblad & Hall Blvd",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.776277,
+                45.453695
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "6125",
+              "stop_name": "SW Eliander & One Embassy Centre",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.780496,
+                45.455116
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "2307",
+              "stop_name": "SW Hall & 88th",
+              "jurisdiction": "Washington Co.",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.76822,
+                45.451452
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "2311",
+              "stop_name": "SW Hall & 91st",
+              "jurisdiction": "Washington Co.",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.770708,
+                45.452204
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "2312",
+              "stop_name": "SW Hall & 91st",
+              "jurisdiction": "Washington Co.",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.770246,
+                45.451913
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "6175",
+              "stop_name": "SW Eliander & One Embassy Centre",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.780345,
+                45.454727
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "6126",
+              "stop_name": "9000 Block SW Washington Square Rd",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.782806,
+                45.454405
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "9649",
+              "stop_name": "Washington Square Transit Center ",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.778809,
+                45.452543
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "5160",
+              "stop_name": "8600 Block SW Scholls Ferry",
+              "jurisdiction": "Beaverton",
+              "zipcode": "97008",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.781737,
+                45.457787
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "2282",
+              "stop_name": "SW Hall & Greenburg",
+              "jurisdiction": "Washington Co.",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.773643,
+                45.453017
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "9650",
+              "stop_name": "Washington Square Transit Center ",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.77881,
+                45.4527
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "4215",
+              "stop_name": "SW Oleson & Rustling Leaves Pl",
+              "jurisdiction": "Washington Co.",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.764363,
+                45.458099
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "4218",
+              "stop_name": "SW Oleson & 89th",
+              "jurisdiction": "Washington Co.",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.766796,
+                45.457082
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "4220",
+              "stop_name": "SW Oleson & 91st",
+              "jurisdiction": "Washington Co.",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.77053,
+                45.455324
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "4209",
+              "stop_name": "SW Oleson & Hall",
+              "jurisdiction": "Beaverton",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.773439,
+                45.453905
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "4208",
+              "stop_name": "SW Oleson & Hall",
+              "jurisdiction": "Beaverton",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.773341,
+                45.453716
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "4219",
+              "stop_name": "SW Oleson & 91st",
+              "jurisdiction": "Beaverton",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.77089,
+                45.455001
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "4214",
+              "stop_name": "SW Oleson & Rustling Leaves Pl",
+              "jurisdiction": "Washington Co.",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.764271,
+                45.457957
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "9651",
+              "stop_name": "Washington Square Transit Center",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.778805,
+                45.452389
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "9185",
+              "stop_name": "SW Scholls Ferry & Progress Park & Ride",
+              "jurisdiction": "Beaverton",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.782955,
+                45.455495
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "12402",
+              "stop_name": "SW Hall & Greenburg",
+              "jurisdiction": "Washington Co.",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.773732,
+                45.453287
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "9220",
+              "stop_name": "Washington Square Transit Center",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.778785,
+                45.45229
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "9570",
+              "stop_name": "8800 Block SW Oleson",
+              "jurisdiction": "Washington Co.",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.767575,
+                45.456629
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "13588",
+              "stop_name": "SW Summit Dr & Greenburg",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.775424,
+                45.451343
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "13582",
+              "stop_name": "SW Blum & Palmblad",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.776915,
+                45.452916
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "13589",
+              "stop_name": "SW Summit Dr & Palmblad",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.775995,
+                45.451507
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "properties": {
+              "Name": null,
+              "description": null,
+              "stop_id": "9652",
+              "stop_name": "Washington Square Transit Center",
+              "jurisdiction": "Tigard",
+              "zipcode": "97223",
+              "type": "BUS"
+            },
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -122.778785,
+                45.452445
+              ]
+            }
+          }
+        ]
+      }
+
+      const busIcon = L.icon({
+        iconUrl: 'http://tiny.cc/x6okcz',
+        iconSize: [13, 13],
+        iconAnchor: [6.5, 6.5],
+        popupAnchor: [-3, -76]
+      });
+
+      map.dragging.disable();
+
+      stops.features.map(s => {
+        L.marker([s.geometry.coordinates[1], s.geometry.coordinates[0]], { icon: busIcon }).addTo(map);
+      })
+
+      // L.marker([45.484260, -122.837361], { icon: busIcon }).addTo(map);
+      // L.marker([45.484431, -122.838024], { icon: busIcon }).addTo(map);
+      // L.marker([45.484861, -122.834771], { icon: busIcon }).addTo(map);
+      // L.marker([45.484661, -122.834386], { icon: busIcon }).addTo(map);
+
+      let myIcon = L.divIcon({
+        className: 'marker',
+        html: '<div id="marker1"></div>',
+        iconAnchor: [-10, 8]
+      });
+
+      const iconmarker = L.marker([45.484260, -122.837361], { icon: myIcon }).addTo(map);
+      const marker1 = document.getElementById('marker1')
+
+      let timer = 0;
+      setInterval(() => {
+        timer++;
+        marker1.innerText = timer
+      }, 1000)
+
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        maxZoom: 30,
+        id: 'mapbox.streets',
+        accessToken: 'pk.eyJ1IjoidHRvc2kiLCJhIjoiY2swOGxwM3VtMWVzMzNuazE5cTVyYXdsNiJ9.MRu9AplCECh2IbInvDEuqQ'
+      }).addTo(map);
+      console.log(JSON.stringify(map.getBounds()))
+    });
+  </script>
+</body>
+</html>
